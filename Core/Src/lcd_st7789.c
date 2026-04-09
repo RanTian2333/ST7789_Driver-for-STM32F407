@@ -158,7 +158,7 @@ void LCD_DrawPoint(uint16_t x, uint16_t y, uint16_t color)
 void LCD_WriteChar_12(uint16_t x, uint16_t y, uint16_t gbCode, uint16_t fg, uint16_t bg)
 {
     uint8_t buf[24];
-    if(GT30_GetMatrix(FONT_12X12, gbCode, buf)) return;
+    if(GT30_GetGB2312_Matrix(FONT_12X12, gbCode, buf)) return;
 
     LCD_SetWindow(x, y, x+11, y+11);
     LCD_CS_LOW(); LCD_DC_HIGH();
@@ -177,7 +177,7 @@ void LCD_WriteChar_12(uint16_t x, uint16_t y, uint16_t gbCode, uint16_t fg, uint
 void LCD_WriteChar_16(uint16_t x, uint16_t y, uint16_t gbCode, uint16_t fg, uint16_t bg)
 {
     uint8_t buf[32];
-    if(GT30_GetMatrix(FONT_16X16, gbCode, buf)) return;
+    if(GT30_GetGB2312_Matrix(FONT_16X16, gbCode, buf)) return;
 
     LCD_SetWindow(x,y,x+15,y+15);
     LCD_CS_LOW(); LCD_DC_HIGH();
@@ -196,7 +196,7 @@ void LCD_WriteChar_16(uint16_t x, uint16_t y, uint16_t gbCode, uint16_t fg, uint
 void LCD_WriteChar_24(uint16_t x, uint16_t y, uint16_t gbCode, uint16_t fg, uint16_t bg)
 {
     uint8_t buf[72];
-    if(GT30_GetMatrix(FONT_24X24, gbCode, buf)) return;
+    if(GT30_GetGB2312_Matrix(FONT_24X24, gbCode, buf)) return;
 
     LCD_SetWindow(x,y,x+23,y+23);
     LCD_CS_LOW(); LCD_DC_HIGH();
@@ -215,7 +215,7 @@ void LCD_WriteChar_24(uint16_t x, uint16_t y, uint16_t gbCode, uint16_t fg, uint
 void LCD_WriteChar_32(uint16_t x, uint16_t y, uint16_t gbCode, uint16_t fg, uint16_t bg)
 {
     uint8_t buf[128];
-    if(GT30_GetMatrix(FONT_32X32, gbCode, buf)) return;
+    if(GT30_GetGB2312_Matrix(FONT_32X32, gbCode, buf)) return;
 
     LCD_SetWindow(x,y,x+31,y+31);
     LCD_CS_LOW(); LCD_DC_HIGH();
@@ -231,57 +231,89 @@ void LCD_WriteChar_32(uint16_t x, uint16_t y, uint16_t gbCode, uint16_t fg, uint
 }
 
 // ==================== ASCII 显示 ====================
-void LCD_WriteASCII_8x16(uint16_t x,uint16_t y,uint8_t ascii,uint16_t fg,uint16_t bg)
-{
-    uint8_t buf[16];
-    if(GT30_GetMatrix(ASCII_8X16, ascii, buf)) return;
 
-    LCD_SetWindow(x,y,x+7,y+15);
-    LCD_CS_LOW(); LCD_DC_HIGH();
-    for(int r=0;r<16;r++) {
+// 6×12 ASCII
+void LCD_WriteASCII_6x12(uint16_t x, uint16_t y, uint8_t ascii, uint16_t fg, uint16_t bg) {
+    uint8_t buf[12] = {0};
+    if(GT30_GetASCII_Matrix(ASCII_6X12, ascii, buf)) return;
+
+    LCD_SetWindow(x, y, x+5, y+11);
+    LCD_CS_LOW();
+    LCD_DC_HIGH();
+
+    for(int r=0; r<12; r++) {
         uint8_t d = buf[r];
-        for(int c=0;c<8;c++) {
-            uint16_t clr = (d & (0x80>>c)) ? fg : bg;
-            uint8_t b[2]={clr>>8, clr&0xFF};
-            HAL_SPI_Transmit(&hspi1,b,2,HAL_MAX_DELAY);
+        for(int c=0; c<6; c++) {
+            uint16_t clr = (d & (0x80 >> c)) ? fg : bg;
+            uint8_t b[2] = {clr >> 8, clr & 0xFF};
+            HAL_SPI_Transmit(&hspi1, b, 2, HAL_MAX_DELAY);
         }
     }
     LCD_CS_HIGH();
 }
 
+// 8×16 ASCII
+void LCD_WriteASCII_8x16(uint16_t x,uint16_t y,uint8_t ascii,uint16_t fg,uint16_t bg)
+{
+    uint8_t buf[16] = {0};
+    if(GT30_GetASCII_Matrix(ASCII_8X16, ascii, buf)) return;
 
+    LCD_SetWindow(x,y,x+7,y+15);
+    LCD_CS_LOW();
+    LCD_DC_HIGH();
 
-// void LCD_PrintStr(uint16_t x, uint16_t y, const char *str,
-//                   uint16_t fgColor, uint16_t bgColor,FontSize_t fontSize)
-// {
-//     uint16_t curX = x;
-//     uint8_t width = 0;
-//
-//
-//     while (*str)
-//     {
-//         uint8_t high = (uint8_t)*str++;
-//         uint8_t low  = (uint8_t)*str++;
-//         uint16_t gbCode = ((uint16_t)high << 8) | low;
-//
-//         if (fontSize == FONT_12X12) {
-//             width = 12;
-//             LCD_WriteChar_12(curX, y, gbCode, fgColor, bgColor);
-//         } else if (fontSize == FONT_16X16) {
-//             width = 16;
-//             LCD_WriteChar_16(curX, y, gbCode, fgColor, bgColor);
-//         } else if (fontSize == FONT_24X24) {
-//             width = 24;
-//             LCD_WriteChar_24(curX, y, gbCode, fgColor, bgColor);
-//         } else if (fontSize == FONT_32X32) {
-//             width = 32;
-//             LCD_WriteChar_32(curX, y, gbCode, fgColor, bgColor);
-//         }
-//
-//         curX += width + 1;  // 字宽 + 1像素间距
-//     }
-// }
+    for(int r=0; r<16; r++) {
+        uint8_t d = buf[r];
+        for(int c=0; c<8; c++) {
+            uint16_t clr = (d & (0x80 >> c)) ? fg : bg;
+            uint8_t b[2] = {clr >> 8, clr & 0xFF};
+            HAL_SPI_Transmit(&hspi1, b, 2, HAL_MAX_DELAY);
+        }
+    }
+    LCD_CS_HIGH();
+}
 
+// 12×24 ASCII
+void LCD_WriteASCII_12x24(uint16_t x, uint16_t y, uint8_t ascii, uint16_t fg, uint16_t bg) {
+    uint8_t buf[48] = {0};
+    if(GT30_GetASCII_Matrix(ASCII_12X24, ascii, buf)) return;
+
+    LCD_SetWindow(x, y, x+11, y+23);
+    LCD_CS_LOW();
+    LCD_DC_HIGH();
+
+    for(int r=0; r<24; r++) {
+        uint16_t d = (buf[r*2] << 8) | buf[r*2+1];
+        for(int c=0; c<12; c++) {
+            uint16_t clr = (d & (0x8000 >> c)) ? fg : bg;
+            uint8_t b[2] = {clr >> 8, clr & 0xFF};
+            HAL_SPI_Transmit(&hspi1, b, 2, HAL_MAX_DELAY);
+        }
+    }
+    LCD_CS_HIGH();
+}
+
+// 16×32 ASCII
+void LCD_WriteASCII_16x32(uint16_t x, uint16_t y, uint8_t ascii, uint16_t fg, uint16_t bg) {
+    uint8_t buf[64] = {0};
+    if(GT30_GetASCII_Matrix(ASCII_16X32, ascii, buf)) return;
+
+    LCD_SetWindow(x, y, x+15, y+31);
+    LCD_CS_LOW();
+    LCD_DC_HIGH();
+
+    for(int r=0; r<32; r++) {
+        uint16_t d = (buf[r*2] << 8) | buf[r*2+1];
+        for(int c=0; c<16; c++) {
+            uint16_t clr = (d & (0x8000 >> c)) ? fg : bg;
+            uint8_t b[2] = {clr >> 8, clr & 0xFF};
+            HAL_SPI_Transmit(&hspi1, b, 2, HAL_MAX_DELAY);
+        }
+    }
+    LCD_CS_HIGH();
+}
+
+//  中英文字符串整合显示
 void LCD_PrintStr(uint16_t x, uint16_t y, const char *str,
                   uint16_t fgColor, uint16_t bgColor,FontSize_t fontSize)
 {
@@ -289,6 +321,7 @@ void LCD_PrintStr(uint16_t x, uint16_t y, const char *str,
     uint16_t curY = y;    // 当前Y坐标
     uint8_t width = 0;    // 单个字符宽度
     uint8_t charHeight = 0;// 字符高度（用于换行）
+
 
     // 先根据字体大小确定 宽度+高度
     if (fontSize == FONT_12X12) {
@@ -333,3 +366,115 @@ void LCD_PrintStr(uint16_t x, uint16_t y, const char *str,
     }
 }
 
+
+void LCD_Print(uint16_t x, uint16_t y, const char *str,
+                    uint16_t fg, uint16_t bg,
+                    FontSize_t asciiFont,   // ASCII字体
+                    FontSize_t chineseFont) // 汉字字体
+{
+    uint16_t curX = x;
+    uint16_t curY = y;
+
+    uint8_t asciiW = 0, asciiH = 0;
+    uint8_t hzW = 0, hzH = 0;
+
+    /* ===== ASCII尺寸 ===== */
+    switch(asciiFont)
+    {
+        case ASCII_6X12: asciiW=6; asciiH=12; break;
+        case ASCII_8X16: asciiW=8; asciiH=16; break;
+        case ASCII_12X24: asciiW=12; asciiH=24; break;
+        case ASCII_16X32: asciiW=16; asciiH=32; break;
+    }
+
+    /* ===== 汉字尺寸 ===== */
+    switch(chineseFont)
+    {
+        case FONT_12X12: hzW=12; hzH=12; break;
+        case FONT_16X16: hzW=16; hzH=16; break;
+        case FONT_24X24: hzW=24; hzH=24; break;
+        case FONT_32X32: hzW=32; hzH=32; break;
+    }
+
+    while(*str)
+    {
+        /* ================= ASCII ================= */
+        if(*str < 0x80)
+        {
+            char ch = *str++;
+
+            // 换行符
+            if(ch == '\n')
+            {
+                curX = x;
+                curY += asciiH + LINE_SPACE;
+                continue;
+            }
+
+            // 自动换行
+            if(curX + asciiW > LCD_WIDTH)
+            {
+                curX = x;
+                curY += asciiH + LINE_SPACE;
+            }
+
+            /* === 调用ASCII函数 === */
+            switch(asciiFont)
+            {
+                case ASCII_6X12:
+                    LCD_WriteASCII_6x12(curX, curY, ch, fg, bg);
+                    break;
+
+                case ASCII_8X16:
+                    LCD_WriteASCII_8x16(curX, curY, ch, fg, bg);
+                    break;
+
+                case ASCII_12X24:
+                    LCD_WriteASCII_12x24(curX, curY, ch, fg, bg);
+                    break;
+
+                case ASCII_16X32:
+                    LCD_WriteASCII_16x32(curX, curY, ch, fg, bg);
+                    break;
+            }
+
+            curX += asciiW + 1;
+        }
+        /* ================= 中文（GB2312） ================= */
+        else
+        {
+            uint8_t high = (uint8_t)*str++;
+            uint8_t low  = (uint8_t)*str++;
+            uint16_t gb = (high << 8) | low;
+
+            // 自动换行
+            if(curX + hzW > LCD_WIDTH)
+            {
+                curX = x;
+                curY += hzH + LINE_SPACE;
+            }
+
+            /* === 调用汉字函数 === */
+            switch(chineseFont)
+            {
+                case FONT_12X12:
+                    LCD_WriteChar_12(curX, curY, gb, fg, bg);
+                    break;
+
+                case FONT_16X16:
+                    LCD_WriteChar_16(curX, curY, gb, fg, bg);
+                    break;
+
+                case FONT_24X24:
+                    LCD_WriteChar_24(curX, curY, gb, fg, bg);
+                    break;
+
+                case FONT_32X32:
+                    LCD_WriteChar_32(curX, curY, gb, fg, bg);
+                    break;
+            }
+
+            curX += hzW + 1;
+        }
+    }
+}

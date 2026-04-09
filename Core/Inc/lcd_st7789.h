@@ -42,11 +42,14 @@ void LCD_WriteChar_16(uint16_t x, uint16_t y, uint16_t gbCode, uint16_t fg, uint
 void LCD_WriteChar_24(uint16_t x, uint16_t y, uint16_t gbCode, uint16_t fg, uint16_t bg);
 void LCD_WriteChar_32(uint16_t x, uint16_t y, uint16_t gbCode, uint16_t fg, uint16_t bg);
 
+void LCD_WriteASCII_6x12(uint16_t x,uint16_t y,uint8_t ascii,uint16_t fg,uint16_t bg);
 void LCD_WriteASCII_8x16(uint16_t x,uint16_t y,uint8_t ascii,uint16_t fg,uint16_t bg);
+void LCD_WriteASCII_12x24(uint16_t x,uint16_t y,uint8_t ascii,uint16_t fg,uint16_t bg);
+void LCD_WriteASCII_16x32(uint16_t x,uint16_t y,uint8_t ascii,uint16_t fg,uint16_t bg);
 
-
-
-void LCD_PrintStr(uint16_t x, uint16_t y, const char *str,
-                  uint16_t fgColor, uint16_t bgColor,FontSize_t fontSize);
+void LCD_Print(uint16_t x, uint16_t y, const char *str,
+                    uint16_t fg, uint16_t bg,
+                    FontSize_t asciiFont,   // ASCII字体
+                    FontSize_t chineseFont); // 汉字字体
 
 #endif

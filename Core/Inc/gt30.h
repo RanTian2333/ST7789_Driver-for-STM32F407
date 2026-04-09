@@ -26,9 +26,10 @@ void GT30_Init(void);  // 初始化 GT30 芯片
 void     GT30_SwitchMode(void);   // 切换 SPI 到 Mode0 给字库用
 void     LCD_SwitchMode(void);    // 切换 SPI 到 Mode3 给 LCD 用
 void     GT30_ReadBytes(uint32_t addr, uint8_t *buf, uint16_t len);
-void     GT30_GetDotMatrix(uint16_t gbCode, uint8_t *dotBuf);
+
+uint8_t GT30_GetASCII_Matrix(FontSize_t font, uint8_t ascii, uint8_t *dotBuf);
 
 // 统一获取点阵接口（支持所有字号）
-uint8_t GT30_GetMatrix(FontSize_t font, uint16_t code, uint8_t *dotBuf);
+uint8_t GT30_GetGB2312_Matrix(FontSize_t font, uint16_t code, uint8_t *dotBuf);
 
 #endif

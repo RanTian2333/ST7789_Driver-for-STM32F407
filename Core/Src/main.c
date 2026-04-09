@@ -99,14 +99,17 @@ int main(void)
 
   LCD_Fill(0, 0, 239, 239, BLACK);                  // 黑色背景
 
-  LCD_PrintStr(2, 2, "学武汉生", WHITE, BLACK, FONT_12X12);
-  // 用“标准GB2312”硬编码测试
-  // 学：标准 D1 A7
-  // 生：标准 C9 FA
-  LCD_PrintStr(36,0, "\xD1\xA7", RED, BLACK, FONT_16X16); // 学
-  LCD_PrintStr(75,20,"\xC9\xFA", RED, BLACK, FONT_16X16); // 生
-  // 测试 2：ASCII 字母 A（绝对不会 return）
-  //LCD_WriteASCII_8x16(20, 50, 'A', YELLOW, BLACK);
+  //LCD_PrintStr(2, 2, "陈维桐是武汉纺织大学外经贸学院最帅的崽", WHITE, BLACK, ASCII_12X24);
+
+  // LCD_WriteASCII_8x16(2, 120, 'A', WHITE, BLACK);
+  // LCD_WriteASCII_6x12(20, 2, 'F', WHITE, BLACK);
+  // LCD_WriteASCII_8x16(20, 32, 'F', WHITE, BLACK);
+  // LCD_WriteASCII_12x24(20, 82, 'F', WHITE, BLACK);
+  // LCD_WriteASCII_16x32(20, 122, 'F', WHITE, BLACK);
+
+
+  LCD_Print(2, 2, "下面公布机器人实验室最天才的人之一，他的姓名是：杨煜恒 他的QQ是：2497463359。", WHITE, BLACK, ASCII_12X24, FONT_24X24);
+
 
 
   /* USER CODE END 2 */

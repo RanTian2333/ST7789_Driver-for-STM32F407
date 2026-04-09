@@ -69,7 +69,7 @@ void GT30_ReadBytes_Fast(uint32_t addr, uint8_t *buf, uint16_t len)
 }
 
 // ===================== 统一字库获取 =====================
-uint8_t GT30_GetMatrix(FontSize_t font, uint16_t code, uint8_t *dotBuf)
+uint8_t GT30_GetGB2312_Matrix(FontSize_t font, uint16_t code, uint8_t *dotBuf)
 {
     uint32_t addr = 0;
     uint16_t size  = 0;
@@ -152,5 +152,58 @@ uint8_t GT30_GetMatrix(FontSize_t font, uint16_t code, uint8_t *dotBuf)
             memset(dotBuf, 0, size);
             return 1;
     }
+    return 0;
+}
+
+
+//  ===================== 统一字库获取 =====================
+//  获取 ASCII 的矩阵
+
+uint8_t GT30_GetASCII_Matrix(FontSize_t font, uint8_t ascii, uint8_t *dotBuf)
+{
+    uint32_t addr = 0;
+    uint16_t size = 0;
+    uint16_t index = 0;
+
+    // ASCII 范围判断（可显示字符）
+    if (ascii < 0x20 || ascii > 0x7E)
+    {
+        memset(dotBuf, 0, 32);   // 最大64字节，这里清一个安全范围
+        return 1;
+    }
+
+    index = ascii - 0x20;  // ASCII 偏移
+
+    switch (font)
+    {
+        case ASCII_6X12:   // 实际对应 6x12
+            size = 12;
+            addr = 0x1DBE00 + index * size;
+            GT30_ReadBytes_Fast(addr, dotBuf, size);
+            break;
+
+        case ASCII_8X16:   // 实际对应 8x16
+            size = 16;
+            addr = 0x1DD780 + index * size;
+            GT30_ReadBytes_Fast(addr, dotBuf, size);
+            break;
+
+        case ASCII_12X24:   // 实际对应 12x24
+            size = 48;
+            addr = 0x1DFF00 + index * size;
+            GT30_ReadBytes_Fast(addr, dotBuf, size);
+            break;
+
+        case ASCII_16X32:   // 实际对应 16x32
+            size = 64;
+            addr = 0x1E5A50 + index * size;
+            GT30_ReadBytes_Fast(addr, dotBuf, size);
+            break;
+
+        default:
+            memset(dotBuf, 0, 64);
+            return 1;
+    }
+
     return 0;
 }
