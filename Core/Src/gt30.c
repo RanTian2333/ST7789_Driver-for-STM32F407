@@ -105,7 +105,7 @@ uint8_t GT30_GetMatrix(FontSize_t font, uint16_t code, uint8_t *dotBuf)
         case FONT_16X16:
             size = 32;
 
-            if(msb >=0xA1 && lsb <= 0XA9 && lsb >=0xA1) {
+            if(msb >=0xA1 && msb <= 0XA9 && lsb >=0xA1) {
                 index = (msb - 0xA1) * 94 + (lsb - 0xA1);
             }
             else if(msb >=0xB0 && msb <= 0xF7 && lsb >=0xA1) {
@@ -120,7 +120,7 @@ uint8_t GT30_GetMatrix(FontSize_t font, uint16_t code, uint8_t *dotBuf)
             break;
         case FONT_24X24:
             size = 72;
-            if(msb >=0xA1 && lsb <= 0XA9 && lsb >=0xA1) {
+            if(msb >=0xA1 && msb <= 0XA9 && lsb >=0xA1) {
                 index = (msb - 0xA1) * 94 + (lsb - 0xA1);
             }
             else if(msb >=0xB0 && msb <= 0xF7 && lsb >=0xA1) {
@@ -135,7 +135,7 @@ uint8_t GT30_GetMatrix(FontSize_t font, uint16_t code, uint8_t *dotBuf)
             break;
         case FONT_32X32:
             size = 128;
-            if(msb >=0xA1 && lsb <= 0XA9 && lsb >=0xA1)
+            if(msb >=0xA1 && msb <= 0XA9 && lsb >=0xA1)
                 index = (msb - 0xA1) * 94 + (lsb - 0xA1);
             else if(msb >=0xB0 && msb <= 0xF7 && lsb >=0xA1)
                 index = ((msb - 0xB0) * 94 + (lsb - 0xA1)+ 846);

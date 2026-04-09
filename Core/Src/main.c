@@ -99,8 +99,12 @@ int main(void)
 
   LCD_Fill(0, 0, 239, 239, BLACK);                  // 黑色背景
 
-  LCD_PrintStr(2, 2, "陈伟同是武汉纺织大学外经贸学院最大的大傻", WHITE, BLACK, FONT_32X32);
-
+  LCD_PrintStr(2, 2, "学武汉生", WHITE, BLACK, FONT_12X12);
+  // 用“标准GB2312”硬编码测试
+  // 学：标准 D1 A7
+  // 生：标准 C9 FA
+  LCD_PrintStr(36,0, "\xD1\xA7", RED, BLACK, FONT_16X16); // 学
+  LCD_PrintStr(75,20,"\xC9\xFA", RED, BLACK, FONT_16X16); // 生
   // 测试 2：ASCII 字母 A（绝对不会 return）
   //LCD_WriteASCII_8x16(20, 50, 'A', YELLOW, BLACK);
 
