@@ -4,6 +4,8 @@
 #include "stm32f4xx_hal.h"
 #include <stdint.h>
 
+#include "gt30.h"
+
 // LCD 片选引脚：PA4（严格匹配接线表）
 #define LCD_CS_LOW()    HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET)
 #define LCD_CS_HIGH()   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET)
@@ -35,9 +37,16 @@ void LCD_Init(void);
 void LCD_SetWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
 void LCD_Fill(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1, uint16_t color);
 void LCD_DrawPoint(uint16_t x, uint16_t y, uint16_t color);
-void LCD_WriteChar_GT30(uint16_t x, uint16_t y, uint16_t charCode,
-                        uint16_t fgColor, uint16_t bgColor);
+void LCD_WriteChar_12(uint16_t x, uint16_t y, uint16_t gbCode, uint16_t fg, uint16_t bg);
+void LCD_WriteChar_16(uint16_t x, uint16_t y, uint16_t gbCode, uint16_t fg, uint16_t bg);
+void LCD_WriteChar_24(uint16_t x, uint16_t y, uint16_t gbCode, uint16_t fg, uint16_t bg);
+void LCD_WriteChar_32(uint16_t x, uint16_t y, uint16_t gbCode, uint16_t fg, uint16_t bg);
+
+void LCD_WriteASCII_8x16(uint16_t x,uint16_t y,uint8_t ascii,uint16_t fg,uint16_t bg);
+
+
+
 void LCD_PrintStr(uint16_t x, uint16_t y, const char *str,
-                  uint16_t fgColor, uint16_t bgColor);
+                  uint16_t fgColor, uint16_t bgColor,FontSize_t fontSize);
 
 #endif

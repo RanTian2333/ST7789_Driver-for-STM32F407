@@ -97,19 +97,12 @@ int main(void)
   GT30_Init();            // 初始化 GT30 芯片
   LCD_Init();                                      // LCD 初始化
 
-  LCD_Fill(0, 0, 239, 239, BLUE);                  // 蓝色背景
+  LCD_Fill(0, 0, 239, 239, BLACK);                  // 黑色背景
 
-  LCD_PrintStr(5, 5, "武汉纺织大学外经贸学院", WHITE, BLUE);
-  LCD_PrintStr(5, 21, "你是世界上最好的学校", WHITE, BLUE);
+  LCD_PrintStr(2, 2, "陈伟同是武汉纺织大学外经贸学院最大的大傻", WHITE, BLACK, FONT_32X32);
 
-  // CEE4 BABA B7C4 D6AF B4F3 D1A7
-  LCD_WriteChar_GT30(5, 37, 0xCEE4, WHITE, BLUE);
-  LCD_WriteChar_GT30(5, 37+16, 0xC4E3, WHITE, BLUE);
-  LCD_WriteChar_GT30(5, 37+32, 0xB7C4, WHITE, BLUE);
-  LCD_WriteChar_GT30(5, 37+48, 0xD6AF, WHITE, BLUE);
-  LCD_WriteChar_GT30(5, 37+64, 0xB4F3, WHITE, BLUE);
-  LCD_WriteChar_GT30(5, 37+80, 0xD1A7, WHITE, BLUE);
-
+  // 测试 2：ASCII 字母 A（绝对不会 return）
+  //LCD_WriteASCII_8x16(20, 50, 'A', YELLOW, BLACK);
 
 
   /* USER CODE END 2 */
